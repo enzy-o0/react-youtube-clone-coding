@@ -1,9 +1,15 @@
 const express = require('express')
 const app = express()
 const api = require('./routes/index');
-const mongoURI = 'mongodb+srv://root:31021@cluster0.luybf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const bodyParser = require('body-parser');
+const config = require('./config/key')
 
 app.use('/api', api);
+
+//application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: true}));
+//application/json
+app.use(bodyParser.json());
 
 const port = 3001;
 app.listen(port, () => {
@@ -11,7 +17,7 @@ app.listen(port, () => {
 })
 
 const mongoose = require('mongoose')
-mongoose.connect(mongoURI, {
+mongoose.connect(config.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
