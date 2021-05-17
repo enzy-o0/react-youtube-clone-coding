@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const api = require('./routes/index');
 const config = require('./config/key');
 
 const cookieParser = require("cookie-parser");
@@ -21,7 +20,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use('/api', api);
+app.use('/videoFiles', express.static('videoFiles')); // 내부 폴더
+
+app.use('/api/user', require('./routes/users'));
+app.use('/api/video', require('./routes/video'));
+app.use('/api/subscribe', require('./routes/subscribe'));
+app.use('/api/like', require('./routes/like'));
 
 
 const port = 5000;

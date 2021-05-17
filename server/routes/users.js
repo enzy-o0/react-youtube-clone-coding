@@ -25,8 +25,8 @@ router.get('/auth', auth ,(req, res) => {
 router.post('/signUp', (req, res) => {
     const user = new User(req.body)
     user.save((err, userInfo) => {
-        if(err) return res.json({ signUpSuccess: false, err});
-        return res.status(200).json({signUpSuccess: true});
+        if(err) return res.json({ success: false, err});
+        return res.status(200).json({success: true});
     })
 });
 
@@ -35,13 +35,13 @@ router.post('/signIn', (req, res) => {
     User.findOne({ email: req.body.email} , (err, userInfo) => {
         if(!userInfo) {
             return res.json({
-                signInSuccess: false,
+                success: false,
                 message: "제공된 이메일에 해당하는 유저가 없습니다."
             })
         }
 
         userInfo.comparePassword(req.body.password, function(err, isMatch) {
-            if(!isMatch) return res.json({ signInSuccess: false, message: "비밀번호가 틀렸습니다."}, err);
+            if(!isMatch) return res.json({ success: false, message: "비밀번호가 틀렸습니다."}, err);
         })
 
         
@@ -50,7 +50,7 @@ router.post('/signIn', (req, res) => {
 
             res.cookie("x_auth", user.token)
                 .status(200)
-                .json( { signInSuccess: true, userId: user._id })
+                .json( { success: true, userId: user._id })
         })
     })
     
@@ -61,9 +61,9 @@ router.get('/logout', auth, (req, res) => {
     
     User.findByIdAndUpdate({
         _id: req.user._id}, {token: ""}, (err, user) => {
-            if (err) return res.json({ logoutSuccess: false, err });
+            if (err) return res.json({ success: false, err });
             return res.status(200).send( {
-                logoutSuccess: true
+                success: true
         })
     })
 });

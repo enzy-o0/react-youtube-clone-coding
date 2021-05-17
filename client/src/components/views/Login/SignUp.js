@@ -16,7 +16,7 @@ function SignUp(props) {
     };
 
     const tailLayout = {
-        wrapperCol: { offset: 4, span: 14 },
+        wrapperCol: { offset: 10, span: 14 },
     };
 
     const onPassWordHandler = (e) => {
@@ -37,8 +37,8 @@ function SignUp(props) {
 
         dispatch(SignUpUser(value))
                 .then(response => {
-                    if(response.payload.signUpSuccess) {
-                         props.history.push('/signin')
+                    if(response.payload.success) {
+                        props.history.push('/signin')
                     } else {
                         alert('Failed to sign up')
                     }
