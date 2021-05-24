@@ -10,7 +10,7 @@ function SignIn(props) {
     const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false;
     const [rememberMe, setRememberMe] = useState(rememberMeChecked)
 
-    const initialEmail = localStorage.getItem("rememberMe") ? localStorage.getItem("rememberMe") : '';
+    const initial = localStorage.getItem("rememberMe") ? localStorage.getItem("rememberMe") : '';
 
     const layout = {
         labelCol: { span: 8 },
@@ -54,13 +54,13 @@ function SignIn(props) {
             <Form
             {...layout}
             name="basic"
-            initialValues={{ remember: false }}
+            initialValues={rememberMe}
             onFinish={onSubmitHandler}
             >
                 <Form.Item
                     label="Email"
                     name="email"
-                    value={initialEmail}
+                    value={initial}
                     rules={[{ required: true, message: 'Please input your username!' }]}
                 >
                     <Input/>

@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import axios from 'axios';
-import { Card, Icon, Avatar, Col, Typography, Row} from 'antd';
+import { Card, Avatar, Col, Typography, Row} from 'antd';
 import moment from 'moment';
+import { API_KEY } from '../../Config';
+// import YoutubeSearch from 'youtube-search'
+
 const { Title } = Typography;
 const { Meta } = Card;
 
-function Main() {
-
+function RendingPage() {
     const [VideoList, setVideoList] = useState([])
+
+    var search = require('youtube-search');
+
+    var opts = {
+        maxResults: 10,
+        key: API_KEY
+    };
+
+    search('ITZY', opts, function(err, results) {
+        if(err) return console.log(err);
+
+        console.dir(results);
+    });
 
     useEffect(() => {
         axios.get('/api/video/list')
@@ -49,7 +63,6 @@ function Main() {
             <span style={{ marginLeft: '3rem'}} > {video.views} views </span> - <span>{moment(video.createAt).format("MMM DD YY")}</span>
         </Col>
     })
-
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
             <Row gutter={[32, 16]}>
@@ -59,4 +72,4 @@ function Main() {
     )
 }
 
-export default withRouter(Main)
+export default RendingPage

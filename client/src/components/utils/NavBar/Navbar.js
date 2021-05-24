@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import LeftMenu from './Sections/LeftMenu';
 import RightMenu from './Sections/RightMenu';
-import { Drawer, Button } from 'antd';
-import { AlignRightOutlined } from '@ant-design/icons';
+import { Drawer, Button, Menu } from 'antd';
+import { AlignRightOutlined, YoutubeFilled } from '@ant-design/icons';
 import './Sections/Navbar.css';
+
+
 
 function Navbar() {
     const [visible, setVisible] = useState(false)
-
+  
     const showDrawer = () => {
         setVisible(true)
     };
@@ -17,14 +19,17 @@ function Navbar() {
     };
 
     return (
-        <nav className="menu" style={{ position: 'fixed', zIndex: 5, width: '100%' }}>
+        <nav className="menu" style={{ position: 'fixed', zIndex: 5, width: '100%', padding: 0 }}>
             <div className="menu__logo">
-            <a href="/">Logo</a>
+                <a href="/" style={{ color: "#F53D50"}}>
+                    <YoutubeFilled />
+                    <span style={{marginLeft: '0.5rem', fontWeight: '600', letterSpacing: '-1px'}}>AZTube</span>
+                </a>
             </div>
             <div className="menu__container">
-            <div className="menu_left">
+            {/* <div className="menu_left">
                 <LeftMenu mode="horizontal" />
-            </div>
+            </div> */}
             <div className="menu_rigth">
                 <RightMenu mode="horizontal" />
             </div>
