@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { Subscribe } = require("../models/SubScribe");
+const { Subscribe } = require("../models/Subscribe");
 const { Video } = require("../models/Video");
 const { auth } = require("../middleware/auth")
 
