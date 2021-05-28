@@ -32,8 +32,6 @@ function VideoDetailSide() {
                     <br />
                     <span>{video.writer.name}</span>
                     <br />
-                    <span>{video.views} views</span>
-                    <br />
                     <span>{minutes} : {seconds}</span>
                 </div>
             </a>

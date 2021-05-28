@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { withRouter } from 'react-router-dom'
 import axios from 'axios';
-import { Card, Avatar, Col, Typography, Row} from 'antd';
+import { Card, Icon, Avatar, Col, Typography, Row} from 'antd';
 import moment from 'moment';
-import { API_KEY } from '../../Config';
-// import YoutubeSearch from 'youtube-search'
-
 const { Title } = Typography;
 const { Meta } = Card;
 
-function RendingPage() {
+function UserVideo() {
+
     const [VideoList, setVideoList] = useState([])
-
-    var search = require('youtube-search');
-
-    var opts = {
-        maxResults: 10,
-        key: API_KEY
-    };
-
-    search('ITZY', opts, function(err, results) {
-        if(err) return console.log(err);
-
-        console.dir(results);
-    });
 
     useEffect(() => {
         axios.get('/api/video/list')
@@ -60,16 +46,21 @@ function RendingPage() {
             />
             <span>{video.writer?.name}</span>
             <br />
-            <span style={{ marginLeft: '3rem'}} > {video.views} views </span> - <span>{moment(video.createAt).format("MMM DD YY")}</span>
+            <span style={{ marginLeft: '3rem'}} > {moment(video.createAt).format("YYYY-MM-DD")}</span>
         </Col>
     })
+
     return (
-        <div style={{ width: '85%', margin: '3rem auto' }}>
+        <div style={{ width: '90%', margin: '5rem auto' }}>
+            <Title level={5} > 유튜브가 아닌 사이트에 직접 올린 동영상입니다. </Title>
+            <hr />
             <Row gutter={[32, 16]}>
                 {renderVideo}
             </Row>
         </div>
     )
+
 }
 
-export default RendingPage
+export default withRouter(UserVideo)
+

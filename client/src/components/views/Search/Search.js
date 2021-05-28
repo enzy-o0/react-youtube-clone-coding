@@ -1,28 +1,46 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
-import axios from 'axios';
-import { Card, Icon, Avatar, Col, Typography, Row} from 'antd';
+
 import moment from 'moment';
+import axios from 'axios';
+import { API_URL } from '../../Config'
+
+import Avatar from '@material-ui/core/Avatar';
+import { Card, Icon, Col, Typography, Row} from 'antd';
 const { Title } = Typography;
 const { Meta } = Card;
 
-function Main() {
+function Search(props) {
+    const [SearchList, setSearchList] = useState([])
 
-    const [VideoList, setVideoList] = useState([])
+    const keyword = props.match.params.q;
+
+    const variable = {
+        part: 'snippet',
+        q: keyword,
+        maxResults: 20,
+        type: 'video',
+        order: 'viewCount',
+    };
+
+    const keywords = {
+        query: keyword
+    }
 
     useEffect(() => {
-        axios.get('/api/video/list')
+
+            axios.post('/api/video/search', keywords)
             .then(response => {
-                if (response.data.success) {
-                    console.log(response.data.videos)
-                    setVideoList(response.data.videos)
+                if (response.data !== null) {
+                    console.log(response.data.videos);
+                    setSearchList(response.data.videos)
                 } else {
                     alert('비디오 목록을 불러오는데 실패했습니다.');
                 }
             }) 
     }, [])
 
-    const renderVideo = VideoList.map((video, index)=> {
+    const renderVideo = SearchList.map((video, index)=> {
 
         let minutes = Math.floor(video.duration / 60);
         let seconds = Math.floor((video.duration - minutes * 60));
@@ -46,12 +64,14 @@ function Main() {
             />
             <span>{video.writer?.name}</span>
             <br />
-            <span style={{ marginLeft: '3rem'}} > {video.views} views </span> - <span>{moment(video.createAt).format("MMM DD YY")}</span>
+            <span style={{ marginLeft: '3rem'}} > {moment(video.createAt).format("YYYY-MM-DD")}</span>
         </Col>
     })
 
     return (
-        <div style={{ width: '85%', margin: '3rem auto' }}>
+        <div style={{ width: '90%', margin: '5rem auto' }}>
+            <Title level={5} > 검색 결과입니다. </Title>
+            <hr />
             <Row gutter={[32, 16]}>
                 {renderVideo}
             </Row>
@@ -59,4 +79,4 @@ function Main() {
     )
 }
 
-export default withRouter(Main)
+export default withRouter(Search)

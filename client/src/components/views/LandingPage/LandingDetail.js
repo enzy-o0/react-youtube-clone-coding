@@ -3,31 +3,37 @@ import { withRouter } from 'react-router-dom'
 import {Row, Col, List} from 'antd'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar';
-import SideVideo from './Sections/VideoDetailSide'
-import SubscribeVideo from './Sections/VideoSubscribe'
-import VideoComment from './Sections/VideoComment'
-import LikeDislike from './Sections/Sections/VideoLikeDisLike'
+import SideVideo from '../Video/Sections/VideoDetailSide'
+import SubscribeVideo from '../Video/Sections/VideoSubscribe'
+import VideoComment from '../Video/Sections/VideoComment'
+import LikeDislike from '../Video/Sections/Sections/VideoLikeDisLike'
+import { VIDEO_URL } from '../../Config'
 
-function VideoDetail(props) {
+function LandingDetail(props) {
 
-    const videoId = props.match.params.videoId;
     const [VideoDetail, setVideoDetail] = useState([]);
     const [CommentLists, setCommentLists] = useState([]);
 
+
+    const youtubeId = props.match.params.youtubeId;
+    
     const variable = { 
-        videoId: videoId 
+        part: 'snippet',
+        id: youtubeId,
     }
 
     useEffect(() => {
-        axios.post('/api/video/getVideoDetail', variable)
+        
+        axios.get({VIDEO_URL}, { variable })
             .then(response => {
-                if (response.data.success) {
-                    console.log(response.data.videoDetails);
-                    setVideoDetail(response.data.videoDetails);
+                console.log(response);
+
+                if (response.data !== null) {
+                    setVideoDetail(response.data.items)
                 } else {
-                    alert('비디오 상세페이지를 불러오지 못했습니다.');
+                    alert('비디오 목록을 불러오는데 실패했습니다.');
                 }
-            })
+        }) 
 
         axios.post('/api/video/getComments', variable)
             .then(response => {
@@ -52,14 +58,14 @@ function VideoDetail(props) {
         return (
             <Row gutter={[16, 16]}>
                 <Col lg={18} xs={24}>
-                    <div style={{ width: '100%', padding: '3rem 4rem', marginTop: '1rem'}}>
+                    <div style={{ width: '100%', padding: '3rem 4rem'}}>
     
                         <video controls style={{ width: '100%'}} >
                             <source src={`http://localhost:5000/${VideoDetail.filePath}`} type="video/mp4"/>
                         </video>
 
                         <List.Item
-                            actions={[<LikeDislike video videoId={videoId} useId={localStorage.getItem('userId')} />, subscribeButton]}>
+                            actions={[<LikeDislike video videoId={youtubeId} useId={localStorage.getItem('userId')} />, subscribeButton]}>
 
                             <List.Item.Meta
                                 avatar={<Avatar src={VideoDetail.writer.image}/>}
@@ -69,12 +75,12 @@ function VideoDetail(props) {
                         </List.Item>
 
                         {CommentLists && (
-                            <VideoComment refreshFunction={refreshFunction} commentList={CommentLists} videoId={videoId}/>
+                            <VideoComment refreshFunction={refreshFunction} commentList={CommentLists} videoId={youtubeId}/>
                         ) }
 
                     </div>
                 </Col>
-                <Col lg={6} xs={24} style={{marginTop: '2rem'}}>
+                <Col lg={6} xs={24}>
                     <SideVideo />
                 </Col>
             </Row>
@@ -84,4 +90,4 @@ function VideoDetail(props) {
     }
 }
 
-export default withRouter(VideoDetail)
+export default withRouter(LandingDetail)

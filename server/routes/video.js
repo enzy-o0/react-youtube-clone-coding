@@ -93,6 +93,21 @@ router.get('/list', (req, res) => {
 
 });
 
+router.post('/search', (req, res) => {
+    
+    console.log(req.body.query)
+
+    const query = req.body.query;
+
+    Video.find({"title": {'$regex': `${query}`}})
+        .populate('writer') // 모든 writer 정보를 가져옴
+        .exec((err, videos) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).json({ success: true, videos: videos})
+        })
+
+});
+
 router.post('/getVideoDetail', (req, res) => {
     
     Video.findOne({"_id" : req.body.videoId })

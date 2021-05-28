@@ -6,29 +6,29 @@ import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const { Title } = Typography
 
-const PrivateOptions = [
-    { value: 0, label: 'private'},
-    { value: 1, label: 'public '}
-]
+// const PrivateOptions = [
+//     { value: 0, label: 'private'},
+//     { value: 1, label: 'public '}
+// ]
 
-const CatergoryOptions = [
-    { value: 0, label: 'Film & Animation'},
-    { value: 1, label: 'Autos & Vehicles'},
-    { value: 2, label: 'Music'},
-    { value: 3, label: 'Pets & Animals'}
-]
+// const CatergoryOptions = [
+//     { value: 0, label: 'Film & Animation'},
+//     { value: 1, label: 'Autos & Vehicles'},
+//     { value: 2, label: 'Music'},
+//     { value: 3, label: 'Pets & Animals'}
+// ]
 function VideoUpload(props) {
     const user = useSelector(state => state.user)
     const [VideoTitle, setVideoTitle] = useState('')
     const [VideoDescription, setVideoDescription] = useState('')
-    const [VideoPrivate, setVideoPrivate] = useState(0)
-    const [VideoCategory, setVideoCategory] = useState("Film & Animation")
     const [VideoFilePath, setVideoFilePath] = useState("")
     const [VideoDuration, setVideoDuration] = useState("")
     const [VideoThumbNailPath, setVideoThumbNailPath] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
 
     const onTitleChange = (e) => {
         setVideoTitle(e.currentTarget.value);
@@ -38,13 +38,9 @@ function VideoUpload(props) {
         setVideoDescription(e.currentTarget.value);
     }
 
-    const onPrivateChange = (e) => {
-        setVideoPrivate(e.currentTarget.value);
-    }
-
-    const onCategoryChange = (e) => {
-        setVideoCategory(e.currentTarget.value);
-    }
+    const renderLoading = (
+        isLoading && <CircularProgress color="secondary" />
+    )
 
     const onDrop = (files) => {
         
@@ -54,7 +50,6 @@ function VideoUpload(props) {
         }
 
         formData.append("file", files[0])
-        console.log(files[0])
 
         axios.post('/api/video/upload', formData, config)
             .then(response=> {
@@ -67,14 +62,14 @@ function VideoUpload(props) {
                     }
 
                     setVideoFilePath(response.data.url)
-
+                    setIsLoading(true)
                     axios.post('/api/video/thumbnail', variable)
                         .then(response => {
                             if(response.data.success) {
                                 console.log(response.data);
                                 setVideoDuration(response.data.fileDuration)
                                 setVideoThumbNailPath(response.data.url)
-
+                                setIsLoading(false)
                             } else {
                                 console.log(response);
                                 alert('썸네일 생성에 실패했습니다.');
@@ -93,9 +88,7 @@ function VideoUpload(props) {
             writer: user.userData._id,
             title: VideoTitle,
             description: VideoDescription,
-            privacy: VideoPrivate,
             filePath: VideoFilePath,
-            category: VideoCategory,
             duration: VideoDuration,
             thumbnail: VideoThumbNailPath
         }
@@ -108,7 +101,7 @@ function VideoUpload(props) {
                         message.success('성공적으로 업로드 했습니다.');
 
                         setTimeout(() => {
-                            props.history.push("/");
+                            props.history.push("/video");
                         }, 3000)
                     } else {
                         alert('Log Out Failed')
@@ -121,13 +114,13 @@ function VideoUpload(props) {
     }
 
     return (
-        <div style={{ maxWidth: '700px', margin: '2rem auto'}}>
+        <div style={{ width: '60%', margin: '5rem auto'}}>
             <div style={{ textAlign: 'center', marginBottom:'2rem'}}>
-                <Title level={2}>Upload Video</Title>
+                <Title level={2}>비디오 업로드 하기</Title>
             </div>
 
             <Form onSubmit={onSubmit}>
-                <div style={{ display:'flex', justifyContent: 'space-between'}}>
+                <div style={{ display:'flex', justifyContent: 'space-around'}}>
                     <DropZone
                         onDrop={onDrop}
                         multiple={false}
@@ -141,11 +134,10 @@ function VideoUpload(props) {
                         )}
                     </DropZone>
 
-                    <div>
-                        {
-                            VideoThumbNailPath && 
-                            <img src={`http://localhost:5000/${VideoThumbNailPath}`} alt="videoThumbNail" />
-                        }
+                    <div style={{width: '300px', height: '240px', display: 'flex',
+                                alignItems:'center', justifyContent:'center'}}>
+                        { VideoThumbNailPath && <img src={`http://localhost:5000/${VideoThumbNailPath}`} alt="videoThumbNail" />}
+                        { renderLoading }
                     </div>
                 </div>
 
@@ -161,7 +153,7 @@ function VideoUpload(props) {
 
                 <br/>
                 <br/>
-                <select onChange={onPrivateChange}>
+                {/* <select onChange={onPrivateChange}>
                     {PrivateOptions.map((item, index) => (
                         <option key={index} value={item.value}>{item.label}</option>))}
 
@@ -176,7 +168,7 @@ function VideoUpload(props) {
                 </select>
 
                 <br/>
-                <br/>
+                <br/> */}
                 <Button type="primary" size="large" onClick={onSubmit}>
                     Upload
                 </Button>

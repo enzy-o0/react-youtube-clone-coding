@@ -47,13 +47,13 @@ function SignUp(props) {
 
     return (
         <div style={{ 
-            display: 'flex', justifyContent: 'center', alignItems: 'center'
-            , height: '100vh' }} >
-            <Form
-            {...layout}
-            name="basic"
-            initialValues={{ remember: false }}
-            onFinish={onSubmitHandler}
+                display: 'flex', justifyContent: 'center', alignItems: 'center'
+                , height: '100vh' }} >
+                <Form
+                {...layout}
+                name="basic"
+                initialValues={{ remember: false }}
+                onFinish={onSubmitHandler}
             >
                 <Form.Item
                     label="Email"
@@ -86,7 +86,7 @@ function SignUp(props) {
                     name="confirmPassword"
                     rules={[{ required: true, message: 'Please confirm your password!' }]}
                 >
-                     <Input.Password 
+                    <Input.Password 
                         value={ConfirmPW}
                         onChange={onConfirmPassWordHandler}/>
                 </Form.Item>
@@ -97,7 +97,7 @@ function SignUp(props) {
 
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit">
-                     회원가입
+                        회원가입
                     </Button>
                 </Form.Item>
             </Form>

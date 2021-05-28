@@ -1,4 +1,5 @@
 import React,  { useState } from 'react'
+import { useSelector } from 'react-redux';
 import { Button, Input } from 'antd';
 import axios from 'axios';
 // import { useSelector } from 'react-redux'
@@ -9,9 +10,9 @@ const { TextArea } = Input;
 
 function VideoComment(props) {
     const videoId = props.videoId // 각 컴포넌트에서도 주소참조 가능
-    // const user = useSelector(state => state.user) // 리덕스에서 가져오기
     
     const [commendValue, setCommendValue] = useState("")
+    const user = useSelector(state => state.user);
 
     const onTextAreaHandler = (event) => {
         setCommendValue(event.currentTarget.value);
@@ -37,6 +38,36 @@ function VideoComment(props) {
             })
     }
 
+    const isLogin = () => {
+        if (user.userData && !user.userData.isAuth) {
+            return (
+                <form style={{ display: 'flex', justifyContent: 'space-between'}}>
+                    <TextArea rows={2}
+                    style={{ width: '80%', borderRadius: '5px'}}
+                    onChange={onTextAreaHandler}
+                    value={commendValue}
+                    placeholder="로그인을 해주세요" />
+        
+                    <br />
+                    <Button style={{ width: '18%', height: '52px '}} >댓글</Button>
+                </form>
+            )
+        } else {
+            return (
+                <form style={{ display: 'flex', justifyContent: 'space-between'}} onSubmit={onSubmitHandler}>
+                    <TextArea rows={2}
+                        style={{ width: '80%', borderRadius: '5px'}}
+                        onChange={onTextAreaHandler}
+                        value={commendValue}
+                        placeholder="코멘트를 작성해주세요" />
+
+                    <br />
+                    <Button style={{ width: '18%', height: '52px '}} onClick={onSubmitHandler}>댓글</Button>
+                </form>  
+            )
+        }
+    }
+
     return (
         <div>
             <br />
@@ -52,16 +83,7 @@ function VideoComment(props) {
                 )
             ))}
 
-            <form style={{ display: 'flex', justifyContent: 'space-between'}} onSubmit={onSubmitHandler}>
-                <TextArea rows={2}
-                    style={{ width: '80%', borderRadius: '5px'}}
-                    onChange={onTextAreaHandler}
-                    value={commendValue}
-                    placeholder="코멘트를 작성해주세요" />
-
-                <br />
-                <Button style={{ width: '18%', height: '52px '}} onClick={onSubmitHandler}>submit</Button>
-            </form>
+            {isLogin()}
         </div>
     )
 }
