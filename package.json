@@ -1,11 +1,18 @@
 {
-    "name": "youtube-clone-app",
+    "name": "aztube",
     "version": "1.0.0",
+    "description": "aztube",
+    "main": "index.js",
+    "engine": {
+        "node": "12.22.1",
+        "npm": "6.14.12"
+    },
     "scripts": {
         "start": "node server/server.js",
         "backend": "nodemon server/server.js",
         "front": "npm run start --prefix client",
-        "dev": "concurrently \"npm run backend\" \"npm run start --prefix client\""
+        "dev": "concurrently \"npm run backend\" \"npm run start --prefix client\"",
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
     },
     "dependencies": {
         "bcrypt": "5.0.1",
