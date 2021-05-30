@@ -29,9 +29,8 @@ function VideoComment(props) {
     const onSubmitHandler = async(event) => {
         event.preventDefault();
 
-        const saveCommentResult = Axios.post('/api/video/saveComment', variables);
+        const saveCommentResult = await Axios.post('/api/video/saveComment', variables);
         if(saveCommentResult.data.success) {
-            console.log(saveCommentResult.data)
             setCommendValue("")
             props.refreshFunction(saveCommentResult.data.result)
         } else {

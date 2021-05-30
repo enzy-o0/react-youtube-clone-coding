@@ -94,19 +94,15 @@ function VideoUpload(props) {
         const videoUploadVideo = await Axios.post('/api/video/uploadVideo', variables);
 
         if (videoUploadVideo.data.success) {
-            if (videoUploadVideo.data.success) {
-                message.success('성공적으로 업로드 했습니다.');
+            message.success('성공적으로 업로드 했습니다.');
 
-                setTimeout(() => {
-                    props.history.push("/video");
-                }, 3000)
-            } else {
-                alert('Log Out Failed')
-            }
-
+            setTimeout(() => {
+                props.history.push("/");
+            }, 3000)
         } else {
-            alert('비디오 업로드에 실패 했습니다.');
+            alert('')
         }
+
     }
 
     return (

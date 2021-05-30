@@ -1,8 +1,10 @@
 import React, {useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import Axios from 'axios'
 
 function VideoSubscribe(props) {
-    
+    const user = useSelector(state => state.user);
+
     const [SubscribeNumber, setSubscribeNumber] = useState(0)
     const [IsSubscribe, setIsSubscribe] = useState(false)
 
@@ -43,7 +45,10 @@ function VideoSubscribe(props) {
     }, [])
 
     const onSubscribe = async () => {
-
+        if (user.userData && !user.userData.isAuth) {
+            alert('로그인이 필요한 서비스입니다.');
+            return;
+        } 
         if (IsSubscribe) {
             const subscribeCancelResult = await Axios.post('/api/subscribe/cancel', variabels);
 
