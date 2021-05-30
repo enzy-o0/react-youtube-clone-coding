@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const config = require('./config/key');
+const path = require("path");
 
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
