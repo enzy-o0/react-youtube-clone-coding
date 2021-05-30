@@ -1,54 +1,92 @@
-import React, { useState } from 'react';
-import LeftMenu from './Sections/LeftMenu';
-import RightMenu from './Sections/RightMenu';
-import { Drawer, Button } from 'antd';
-import { AlignRightOutlined } from '@ant-design/icons';
-import './Sections/Navbar.css';
+import React from 'react';
 
-function Navbar() {
-    const [visible, setVisible] = useState(false)
+import Logo from './Sections/Logo'
+import Search from './Sections/SearchBar'
+import NavBarMenu from './Sections/NavBarMenu'
 
-    const showDrawer = () => {
-        setVisible(true)
-    };
+import {makeStyles} from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 
-    const onClose = () => {
-        setVisible(false)
-    };
+import Drawer from '@material-ui/core/Drawer';
+
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme) =>
+    ({
+        root: {
+            display: 'flex',
+        },
+        grow: {
+            flexGrow: 1,
+        },
+        appbar: {
+            boxShadow: 'none',
+            backgroundColor: '#fff',
+            color: '#000',
+            zIndex: theme.zIndex.drawer + 1,
+        },
+        toolbar: {
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+        },
+        drawer: {
+            width: drawerWidth,
+            flexShrink: 0,
+            display: 'none',
+            backgroundColor: 'transparent',
+            [theme.breakpoints.up('md')]: {
+            display: 'block',
+            },
+        },
+        drawerPaper: {
+            width: drawerWidth,
+            display: 'none',
+            [theme.breakpoints.up('md')]: {
+            display: 'block',
+            },
+        },
+        drawerContainer: {
+            overflow: 'auto',
+            display: 'none',
+            [theme.breakpoints.up('md')]: {
+            display: 'block',
+            },
+        },
+        bottomAppBar: {
+            top: 'auto',
+            bottom: 0,
+            display: 'flex',
+            [theme.breakpoints.up('md')]: {
+            display: 'none',
+            },
+        },
+    }),
+);
+
+export default function NavBar() {
+    const classes = useStyles();
 
     return (
-        <nav className="menu" style={{ position: 'fixed', zIndex: 5, width: '100%' }}>
-            <div className="menu__logo">
-            <a href="/">Logo</a>
-            </div>
-            <div className="menu__container">
-            <div className="menu_left">
-                <LeftMenu mode="horizontal" />
-            </div>
-            <div className="menu_rigth">
-                <RightMenu mode="horizontal" />
-            </div>
-            <Button
-                className="menu__mobile-button"
-                type="primary"
-                onClick={showDrawer}
-            >
-                <AlignRightOutlined />
-            </Button>
+        <div className={classes.root}>
+            <AppBar position="fixed" className={classes.appbar}>
+                <Toolbar className={classes.toolbar}>
+                    <Logo />
+                    <Search />
+                    <NavBarMenu />
+                </Toolbar>
+            </AppBar>
             <Drawer
-                title="Basic Drawer"
-                placement="right"
-                className="menu_drawer"
-                closable={false}
-                onClose={onClose}
-                visible={visible}
+                className={classes.drawer}
+                variant="permanent"
+                classes={{
+                paper: classes.drawerPaper,
+                }}
             >
-                <LeftMenu mode="inline" />
-                <RightMenu mode="inline" />
+                <Toolbar />
             </Drawer>
-            </div>
-        </nav>
-    )
+        </div>
+    );
 }
-
-export default Navbar

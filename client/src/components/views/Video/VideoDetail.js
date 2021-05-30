@@ -44,6 +44,7 @@ function VideoDetail(props) {
         setCommentLists(CommentLists.concat(addComment))
     }
 
+    console.log(VideoDetail.writer)
     if (VideoDetail.writer) {
 
         const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <SubscribeVideo userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />  
@@ -51,7 +52,7 @@ function VideoDetail(props) {
         return (
             <Row gutter={[16, 16]}>
                 <Col lg={18} xs={24}>
-                    <div style={{ width: '100%', padding: '3rem 4rem'}}>
+                    <div style={{ width: '100%', padding: '3rem 4rem', marginTop: '1rem'}}>
     
                         <video controls style={{ width: '100%'}} >
                             <source src={`http://localhost:5000/${VideoDetail.filePath}`} type="video/mp4"/>
@@ -73,7 +74,7 @@ function VideoDetail(props) {
 
                     </div>
                 </Col>
-                <Col lg={6} xs={24}>
+                <Col lg={6} xs={24} style={{marginTop: '2rem'}}>
                     <SideVideo />
                 </Col>
             </Row>

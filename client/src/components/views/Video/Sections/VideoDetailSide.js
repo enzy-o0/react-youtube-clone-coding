@@ -32,8 +32,6 @@ function VideoDetailSide() {
                     <br />
                     <span>{video.writer.name}</span>
                     <br />
-                    <span>{video.views} views</span>
-                    <br />
                     <span>{minutes} : {seconds}</span>
                 </div>
             </a>
@@ -42,7 +40,7 @@ function VideoDetailSide() {
     
     return (
         <React.Fragment>
-            <div style={{ marginTop:'3rem' }}></div>
+            <div style={{ marginTop:'5rem' }}></div>
             { renderVideo }
         </React.Fragment>
     )

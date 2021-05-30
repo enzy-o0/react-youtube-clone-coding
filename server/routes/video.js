@@ -1,9 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const { Video } = require("../models/Video");
 const { Comment } = require("../models/Comment");
 const multer = require("multer");
-var ffmpeg = require('fluent-ffmpeg');
+const ffmpeg = require('fluent-ffmpeg');
+let mongoose = require("mongoose");
 
 let storage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -65,7 +66,7 @@ router.post('/thumbnail', (req, res) => {
         return res.json({ success: false, err});
     })
     .screenshot( {
-        count: 3,
+        count: 1,
         folder: 'videoFiles/thumbnails',
         size: '320x240',
         filename: 'thumbnail-%b.png'
@@ -85,6 +86,21 @@ router.post('/uploadVideo', (req, res) => {
 router.get('/list', (req, res) => {
     
     Video.find()
+        .populate('writer') // 모든 writer 정보를 가져옴
+        .exec((err, videos) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).json({ success: true, videos: videos})
+        })
+
+});
+
+router.post('/search', (req, res) => {
+    
+    console.log(req.body.query)
+
+    const query = req.body.query;
+
+    Video.find({"title": {'$regex': `${query}`}})
         .populate('writer') // 모든 writer 정보를 가져옴
         .exec((err, videos) => {
             if(err) return res.status(400).send(err);
@@ -122,8 +138,9 @@ router.post("/saveComment", (req, res) => {
 })
 
 router.post("/getComments", (req, res) => {
+    const videoId = mongoose.Types.ObjectId(req.body.videoId);
 
-    Comment.find({ "videoId": req.body.videoId })
+    Comment.find({ "videoId": videoId })
         .populate('writer')
         .exec((err, comments) => {
             if (err) return res.status(400).send(err)

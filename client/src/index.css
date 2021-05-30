@@ -19,6 +19,8 @@ body {
   background-color: #fff;
 }
 
+a { color: #24292e}
+
 .app {
   flex-direction: column;
   display: flex;
@@ -52,4 +54,59 @@ input.error {
   font-size: 12px;
   font-weight: 500;
   line-height: 12px;
+}
+
+.ant-menu-item.sideMenuItem {
+  color: #757474;
+  height: 3rem;
+  padding: 0.5rem;
+}
+
+.sideMenuItem:hover {
+  color: #F53D50;
+}
+
+.sideMenuItem:active, .sideMenuItem:selected{
+  background-color: #D6D6D6;
+
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: white;
+  color: #F53D50;
+}
+
+.ant-menu-vertical .ant-menu-item::after, .ant-menu-vertical-left .ant-menu-item::after, .ant-menu-vertical-right .ant-menu-item::after, .ant-menu-inline .ant-menu-item::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-right: 3px solid #F53D50;
+}
+
+.MuiDrawer-root	{
+  z-index: 0;
+}
+.makeStyles-toolbar-32, .makeStyles-toolbar-3{
+  z-index: 100;
+}
+
+.videoInfo {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  /* 말줄임 적용 */
+  font-size: 0.8rem;
+  margin-left: 3.5rem;
+  color: #757474;
+}
+
+.videoInfoTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
 }

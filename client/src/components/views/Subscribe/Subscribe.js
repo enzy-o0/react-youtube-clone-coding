@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import axios from 'axios';
-import { Card, Icon, Avatar, Col, Typography, Row} from 'antd';
+import { Card, Avatar, Col, Typography, Row} from 'antd';
 import moment from 'moment';
 const { Title } = Typography;
 const { Meta } = Card;
@@ -36,7 +36,7 @@ function VideoSubscribe() {
 
         return <Col lg={6} md={8} xs={24} key={index}>
             <div style={{ position: 'relative'}}>
-                <a href = {`/subscribe/${subscribe._id}`}>
+                <a href = {`/video/${subscribe._id}`}>
                     <img style={{ width: '100%'}} src={`http://localhost:5000/${subscribe.thumbnail}`} alt="비디오 썸네일" />
                     <div className="duration">
                         <span>{minutes} : {seconds}</span>
@@ -53,13 +53,13 @@ function VideoSubscribe() {
             />
             <span>{subscribe.writer?.name}</span>
             <br />
-            <span style={{ marginLeft: '3rem'}} > {subscribe.views} views </span> - <span>{moment(subscribe.createAt).format("MMM DD YY")}</span>
+            <span style={{ marginLeft: '3rem'}} > {moment(subscribe.createAt).format("MMM DD YY")}</span>
         </Col>
     })
 
     return (
-        <div style={{ width: '85%', margin: '3rem auto' }}>
-            <Title level={2} > Subscribe </Title>
+        <div style={{ width: '90%', margin: '5rem auto' }}>
+            <Title level={5} > 사용자가 구독한 영상입니다. </Title>
             <hr />
             <Row gutter={[32, 16]}>
                 {renderVideo}
