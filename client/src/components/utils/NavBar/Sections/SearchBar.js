@@ -74,7 +74,7 @@ function SearchBar(props) {
             <form onSubmit={onSubmit} className={classes.searchSection}>
                 <div className={classes.search}>
                     <InputBase
-                        placeholder="유투브 검색하기"
+                        placeholder="유튜브 검색하기"
                         classes={{
                             root: classes.inputRoot,
                             input: classes.inputInput,

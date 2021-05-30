@@ -113,7 +113,7 @@ export default function DrawerMenu() {
                             selected={MenuState === 2}
                             onClick={(event) => handleListItemClick(event, 2)}>
                         <ListItemIcon><HomeFilled /></ListItemIcon>
-                        <ListItemText primary="유투브 영상" />
+                        <ListItemText primary="유튜브 영상" />
                     </ListItem>
                 </List>
                 </div>
