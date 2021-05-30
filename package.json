@@ -1,11 +1,8 @@
 {
     "name": "aztube",
     "version": "1.0.0",
-<<<<<<< HEAD
     "description": "aztube",
-    "main": "index.js",
-=======
->>>>>>> withTypescript
+    "main": "server.js",
     "engine": {
         "node": "12.22.1",
         "npm": "6.14.12"
