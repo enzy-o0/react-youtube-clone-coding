@@ -25,9 +25,9 @@
 
         유튜브 API (리스트, 검색)
 
-<img width="100%" src="https://user-images.githubusercontent.com/83004037/120109483-9b588880-c1a4-11eb-83d2-e604fcb7a04d.PNG"/>
-
 <img width="100%" src="https://user-images.githubusercontent.com/83004037/120109529-c511af80-c1a4-11eb-818a-535f9feda78a.PNG"/>
+
+<img width="100%" src="https://user-images.githubusercontent.com/83004037/120110931-aa423980-c1aa-11eb-8c26-ee150d672023.PNG"/>
 
         비디오 업로드
 
@@ -35,7 +35,7 @@
 
         구독 및 코멘트
 
-<img width="100%" src="https://user-images.githubusercontent.com/83004037/120110110-3eaa9d00-c1a7-11eb-9bdd-bc24558e6303.PNG"/>
+<img width="100%" src="https://user-images.githubusercontent.com/83004037/120110495-b5946580-c1a8-11eb-97ed-0b4d901f2ef5.gif"/>
 
 ## 참고 사이트
 
