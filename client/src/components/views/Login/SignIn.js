@@ -45,13 +45,13 @@ function SignIn(props) {
             , width: '100%', height: '100vh' }} >
             <Form
             {...layout}
+            initialValues={{ email:'test@test.com', password: '000000' }}
             name="basic"
             onFinish={onSubmitHandler}
             >
                 <Form.Item
                     label="이메일"
                     name="email"
-                    value="test@test.com"
                     rules={[{ required: true, message: '이메일을 입력해주세요.' }]}
                 >
                     <Input/>
@@ -60,7 +60,6 @@ function SignIn(props) {
                 <Form.Item
                     label="비밀번호"
                     name="password"
-                    value="000000"
                     rules={[{ required: true, message: '비밀번호를 입력해주세요.' }]}
                 >
                     <Input.Password />
