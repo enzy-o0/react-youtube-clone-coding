@@ -136,8 +136,8 @@ function VideoUpload(props) {
 
                     <div style={{width: '300px', height: '240px', display: 'flex',
                                 alignItems:'center', justifyContent:'center'}}>
-                        { VideoThumbNailPath && <img src={`http://localhost:5000/${VideoThumbNailPath}`} alt="videoThumbNail" />}
-                        { renderLoading }
+                        { VideoThumbNailPath && <img src={process.env.NODE_ENV === 'development' ? `http://localhost:5000/${VideoThumbNailPath}`
+                            : `https://aztubes.herokuapp.com/${VideoThumbNailPath}`} alt="videoThumbNail" />}
                     </div>
                 </div>
 
