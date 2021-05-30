@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+
+import Axios from 'axios'
+
 import { Tooltip } from 'antd';
-import axios from 'axios'
-import { LikeOutlined , DislikeOutlined, LikeFilled, DislikeFilled, FastForwardOutlined } from '@ant-design/icons';
+import { LikeOutlined , DislikeOutlined, LikeFilled, DislikeFilled } from '@ant-design/icons';
 
 function VideoLikeDisLike(props) {
 
@@ -19,101 +21,98 @@ function VideoLikeDisLike(props) {
     }
 
     useEffect(() => {
-        
-        axios.post('/api/like/getLikes', variables)
-            .then(response => {
-                if(response.data.success) {
-                    setLikeNumber(response.data.likes.length)
 
-                    response.data.likes.map(like => {
-                        if (like.userId === props.userId) {
-                            setIsLike(true)
+        const getLikesApi = async() => {
+            try {
+                const getLikesResult = await Axios.post('/api/like/getLikes', variables);
+                setLikeNumber(getLikesResult.data.likes.length)
+
+                getLikesResult.data.likes.map(like => {
+                    if (like.userId === props.userId) {
+                        setIsLike(true)
+                    }
+                })
+            } catch (err) {
+                alert(`좋아요 불러오기를 실패했습니다. ${err}`)
+            }
+        }
+
+        const getDisLikesApi = async() => {
+            try {
+                const getDisLikesResult = await Axios.post('/api/like/getDisLikes', variables);
+                    setDisLikeNumber(getDisLikesResult.data.dislikes.length)
+
+                    getDisLikesResult.data.dislikes.map(dislike => {
+                        if (dislike.userId === props.userId) {
+                            setIsDisLike(true);
                         }
                     })
-                } else {
-                    alert('좋아요 불러오기를 실패했습니다.')
-                }
-            });
-
-            axios.post('/api/like/getDisLikes', variables)
-                .then(response => {
-                    if(response.data.success) {
-                        setDisLikeNumber(response.data.dislikes.length)
-
-                        response.data.dislikes.map(dislike => {
-                            if (dislike.userId === props.userId) {
-                                setIsDisLike(true);
-                            }
-                        })
-                    } else {
-                        alert('싫어요 불러오기를 실패했습니다.')
-                    }
-                });
+            } catch (err) {
+                alert(`싫어요 불러오기를 실패했습니다., ${err}`)
+            }
+        }
+        
+        getLikesApi();
+        getDisLikesApi();
 
     }, [])
 
-    const onLikeClickListener = () => {
+    const onLikeClickListener = async() => {
 
         if (!isLike) {
-            axios.post('/api/like/upLike', variables)
-                .then(response => {
-                    if (response.data.success) {
-                        setLikeNumber(LikeNumber + 1)
-                        setIsLike(true)
+            const upLikeResult = await Axios.post('/api/like/upLike', variables);
 
-                        if (isDisLike !== false) {
-                            setDisLikeNumber(DisLikeNumber - 1)
-                            setIsDisLike(false)
-                        }
-                    } else {
-                        alert('좋아요 누르기를 실패했습니다.')
-                    }
-                })
+            if (upLikeResult.data.success) {
+                setLikeNumber(LikeNumber + 1)
+                setIsLike(true)
+
+                if (isDisLike !== false) {
+                    setDisLikeNumber(DisLikeNumber - 1)
+                    setIsDisLike(false)
+                }
+            } else {
+                alert('좋아요 누르기를 실패했습니다.')
+            }
         } else {
-            axios.post('/api/like/unLike', variables)
-                .then(response => {
-                    if (response.data.success) {
-                        setLikeNumber(LikeNumber - 1)
-                        setIsLike(false)
+            
+            const unLikeResult = await Axios.post('/api/like/unLike', variables);
+            if (unLikeResult.data.success) {
+                setLikeNumber(LikeNumber - 1)
+                setIsLike(false)
 
-                    } else {
-                        alert('좋아요 취소를 실패했습니다.')
-                    }
-                })
+            } else {
+                alert('좋아요 취소를 실패했습니다.')
+            }
         }
     }
 
-    const onDislikeClickListener = () => {
+    const onDislikeClickListener = async() => {
         if (!isDisLike) {
-            axios.post('/api/like/updisLike', variables)
-                .then(response => {
-                    if (response.data.success) {
-                        setDisLikeNumber(DisLikeNumber + 1)
-                        setIsDisLike(true)
+            const updisLikeResult = Axios.post('/api/like/updisLike', variables);
 
-                        if (isLike !== false) {
-                            setLikeNumber(LikeNumber - 1)
-                            setIsLike(false)
-                        }
-                    } else {
-                        alert('좋아요 누르기를 실패했습니다.')
-                    }
-                })
+            if (updisLikeResult.data.success) {
+                setDisLikeNumber(DisLikeNumber + 1)
+                setIsDisLike(true)
+
+                if (isLike !== false) {
+                    setLikeNumber(LikeNumber - 1)
+                    setIsLike(false)
+                }
+            } else {
+                alert('싫어요 누르기를 실패했습니다.')
+            }
         } else {
-            axios.post('/api/like/undisLike', variables)
-                .then(response => {
-                    if (response.data.success) {
-                        setDisLikeNumber(DisLikeNumber - 1)
-                        setIsDisLike(false)
+            const undisLikeResul = Axios.post('/api/like/undisLike', variables);
+            if (undisLikeResul.data.success) {
+                setDisLikeNumber(DisLikeNumber - 1)
+                setIsDisLike(false)
 
-                    } else {
-                        alert('좋아요 취소를 실패했습니다.')
-                    }
-                })
+            } else {
+                alert('싫어요 취소를 실패했습니다.')
+            }
         }
     }
 
-  
     return (
         <div>
             <span key="comment-basic-like">

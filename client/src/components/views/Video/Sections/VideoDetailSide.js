@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import Axios from 'axios';
+import { ContactSupportOutlined } from '@material-ui/icons';
 
 function VideoDetailSide() {
 
     const [VideoList, setVideoList] = useState([])
 
     useEffect(() => {
-        axios.get('/api/video/list')
-            .then(response => {
-                if (response.data.success) {
-                    console.log(response.data.videos)
-                    setVideoList(response.data.videos)
-                } else {
-                    alert('비디오 목록을 불러오는데 실패했습니다.');
-                }
-            }) 
+
+        const videoListApi = async() => {
+            try {
+                const videoListResult = await Axios.get('/api/video/list');
+                setVideoList(videoListResult.data.videos);
+            } catch (err) {
+                alert(`비디오 사이드 목록을 불러오는데 실패했습니다. ${err}`);
+            }
+        }
+
+        videoListApi();
+        
     }, [])
 
     const renderVideo = VideoList.map((video, index)=> {

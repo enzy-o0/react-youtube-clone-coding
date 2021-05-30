@@ -1,10 +1,12 @@
 import React,  { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Button, Input } from 'antd';
-import axios from 'axios';
-// import { useSelector } from 'react-redux'
+
+import Axios from 'axios';
+
 import SingleComment from './Sections/VideoCommentSingle'
 import ReplyComment from './Sections/VideoCommentReply'
+
+import { Button, Input } from 'antd';
 
 const { TextArea } = Input;
 
@@ -24,18 +26,17 @@ function VideoComment(props) {
         videoId: videoId
     }
 
-    const onSubmitHandler = (event) => {
+    const onSubmitHandler = async(event) => {
         event.preventDefault();
-        axios.post('/api/video/saveComment', variables)
-            .then(response => {
-                if(response.data.success) {
-                    console.log(response.data)
-                    setCommendValue("")
-                    props.refreshFunction(response.data.result)
-                } else {
-                    alert('코멘트 입력을 실패하였습니다.');
-                }
-            })
+
+        const saveCommentResult = Axios.post('/api/video/saveComment', variables);
+        if(saveCommentResult.data.success) {
+            console.log(saveCommentResult.data)
+            setCommendValue("")
+            props.refreshFunction(saveCommentResult.data.result)
+        } else {
+            alert('코멘트 입력을 실패하였습니다.');
+        }
     }
 
     const isLogin = () => {

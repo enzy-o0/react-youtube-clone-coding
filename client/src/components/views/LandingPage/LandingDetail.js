@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import {Row, Col, List} from 'antd'
 import Axios from 'axios'
-import Avatar from 'antd/lib/avatar/avatar';
+
 import SideVideo from '../Video/Sections/VideoDetailSide'
+
+import {Row, Col, List} from 'antd'
+import Avatar from 'antd/lib/avatar/avatar';
 
 function LandingDetail(props) {
 

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -59,7 +60,6 @@ const useStyles = makeStyles((theme) =>
 export default function DrawerMenu() {
     const classes = useStyles();
 
-    const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
         <AppBar position="fixed" color="inherit" className={classes.bottomAppBar}>
             <Toolbar className={classes.toolbarFlex}>

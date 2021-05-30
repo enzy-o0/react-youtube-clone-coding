@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { Comment, Avatar, Input, Button } from 'antd';
-// import { useSelector } from 'react-redux'
+
+import Axios from 'axios';
+
 import LikeDislike from './VideoLikeDisLike';
-import axios from 'axios';
+
+import { Comment, Avatar, Input, Button } from 'antd';
 const { TextArea } = Input;
 
 function VideoCommentSingle(props) {
@@ -23,19 +25,19 @@ function VideoCommentSingle(props) {
         responseTo: props.comment._id
     }
 
-    const onSubmitHandler = (event) => {
+    const onSubmitHandler = async(event) => {
         event.preventDefault();
-        axios.post('/api/video/saveComment', variables)
-            .then(response => {
-                if(response.data.success) {
-                    console.log(response.data)
-                    setCommentValue("")
-                    setopenReply(!openReply)
-                    props.refreshFunction(response.data.result)
-                } else {
-                    alert('코멘트 입력을 실패하였습니다.');
-                }
-            })
+
+        const saveCommentResult = await Axios.post('/api/video/saveComment', variables);
+        
+        if(saveCommentResult.data.success) {
+            console.log(saveCommentResult.data)
+            setCommentValue("")
+            setopenReply(!openReply)
+            props.refreshFunction(saveCommentResult.data.result)
+        } else {
+            alert('코멘트 입력을 실패하였습니다.');
+        }
     }
 
     const onReplyOpenHandler = (event) => {

@@ -1,8 +1,9 @@
 import React  from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import Axios from 'axios';
 
-import axios from 'axios';
+import { logoutUser } from "../../../../_actions/user_action";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
@@ -38,14 +39,14 @@ const useStyles = makeStyles((theme) =>
 );
 
 function NavBarMenu(props) {
+    const user = useSelector(state => state.user);
+    const dispatch = useDispatch();
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    const user = useSelector(state => state.user);
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -60,16 +61,16 @@ function NavBarMenu(props) {
         handleMobileMenuClose();
     };
 
-    const logoutHandler = () => {
-        axios.get('api/user/logout').then(response => {
-        console.log(response)
-        if (response.status === 200) {
-            props.history.push("/signin");
+    const logoutHandler = async() => {
+
+        const resultLogout = await dispatch(logoutUser());
+
+        if (resultLogout.payload.success) {
+            window.location.replace("/"); // 로그아웃시 새로고침. 히스토리 기록되지 않음.
             localStorage.removeItem('userId');
         } else {
-            alert('Log Out Failed')
-        }
-        });
+            alert('로그아웃을 실패하였습니다.')
+        }        
     };
 
 
@@ -91,6 +92,8 @@ function NavBarMenu(props) {
 
 
     if (user.userData && !user.userData.isAuth) {
+        console.log(user)
+
         return (
             <div className={classes.grow}>
 
@@ -135,29 +138,6 @@ function NavBarMenu(props) {
         </div>
         )
     }
-
-    // <div className={classes.sectionMobile}>
-    //             <IconButton
-    //                 edge="end"
-    //                 aria-label="account of current user"
-    //                 aria-controls={menuId}
-    //                 aria-haspopup="true"
-    //                 color="inherit"
-    //             >
-    //                 <SearchIcon />
-    //             </IconButton>
-    //             <IconButton
-    //                 edge="end"
-    //                 aria-label="account of current user"
-    //                 aria-controls={menuId}
-    //                 aria-haspopup="true"
-    //                 onClick={handleProfileMenuOpen}
-    //                 color="inherit"
-    //             >
-    //                 <AccountCircle />
-    //             </IconButton>
-
-    //         </div>
 }
 
 export default withRouter(NavBarMenu)

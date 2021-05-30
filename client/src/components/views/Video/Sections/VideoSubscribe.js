@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from 'react'
-import axios from 'axios'
+import Axios from 'axios'
 
 function VideoSubscribe(props) {
     
@@ -18,52 +18,51 @@ function VideoSubscribe(props) {
 
     useEffect(() => {
 
-        axios.post('/api/subscribe/count', variabelsCount)
-            .then(response => {
-                if(response.data.success) {
-                    console.log(response.data);
-                    setSubscribeNumber(response.data.subscribeNumber)
-                } else {
-                    alert('구독자 수를 받아오기를 실패했습니다.');
-                }
-            }) 
+        const subscribeCountApi = async() => {
+            const subscribeCountResult = await Axios.post('/api/subscribe/count', variabelsCount);
+            console.log(subscribeCountResult);
 
-        axios.post('/api/subscribe/isSubscribe', variabels)
-        .then(response => {
-            if(response.data.success) {
-                console.log(response.data);
-                setIsSubscribe(response.data.isSubscribe)
+            if(subscribeCountResult.data.success) {
+                setSubscribeNumber(subscribeCountResult.data.subscribeNumber)
+            } else {
+                alert('구독자 수를 받아오기를 실패했습니다.');
+            }
+        } 
+
+        const subscribeisSubscribeApi = async() => {
+            const subscribeisSubscribeResult = await Axios.post('/api/subscribe/isSubscribe', variabels)
+            if(subscribeisSubscribeResult.data.success) {
+                setIsSubscribe(subscribeisSubscribeResult.data.isSubscribe)
             } else {
                 alert('구독 여부를 받아오지 못했습니다.');
             }
-        }) 
+        } 
+
+        subscribeCountApi();
+        subscribeisSubscribeApi();
     }, [])
 
-    const onSubscribe = () => {
+    const onSubscribe = async () => {
 
         if (IsSubscribe) {
-            axios.post('/api/subscribe/cancel', variabels)
-                .then(response => {
-                    if(response.data.success) {
-                        console.log(response.data);
-                        setIsSubscribe(!IsSubscribe);
-                        setSubscribeNumber(SubscribeNumber - 1);
-                    } else {
-                        alert('구독 취소가 실패하였습니다.')
-                    }
-                })
+            const subscribeCancelResult = await Axios.post('/api/subscribe/cancel', variabels);
+
+            if(subscribeCancelResult.data.success) {
+                setIsSubscribe(!IsSubscribe);
+                setSubscribeNumber(SubscribeNumber - 1);
+            } else {
+                alert('구독 취소가 실패하였습니다.')
+            }
 
         } else {
-            axios.post('/api/subscribe/add', variabels)
-            .then(response => {
-                if(response.data.success) {
-                    console.log(response.data);
-                    setIsSubscribe(!IsSubscribe);
-                    setSubscribeNumber(SubscribeNumber + 1);
-                } else {
-                    alert('구독하기가 실패하였습니다.')
-                }
-            })
+            const subscribeAddResult = await Axios.post('/api/subscribe/add', variabels);
+
+            if(subscribeAddResult.data.success) {
+                setIsSubscribe(!IsSubscribe);
+                setSubscribeNumber(SubscribeNumber + 1);
+            } else {
+                alert('구독하기가 실패하였습니다.')
+            }
         }
     }
 

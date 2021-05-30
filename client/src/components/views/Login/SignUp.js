@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Checkbox } from 'antd';
-import { useDispatch } from 'react-redux';
-import { SignUpUser } from '../../../_actions/user_action'
 import { withRouter } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+
+import { Form, Input, Button, Checkbox } from 'antd';
+import { SignUpUser } from '../../../_actions/user_action'
 
 function SignUp(props) {
     const dispatch = useDispatch();
@@ -27,22 +28,21 @@ function SignUp(props) {
         setConfirmPW(e.currentTarget.value)
     }
 
-    const onSubmitHandler = (value) => {
+    const onSubmitHandler = async(value) => {
         // event.preventDefault(); // refresh 방지
-        console.log('value: ', value);
 
         if (Password !== ConfirmPW) {
             return alert('비밀번호가 같지 않습니다. 다시 입력해주세요.')
         }
 
-        dispatch(SignUpUser(value))
-                .then(response => {
-                    if(response.payload.success) {
-                        props.history.push('/signin')
-                    } else {
-                        alert('Failed to sign up')
-                    }
-                })
+        const result = await dispatch(SignUpUser(value));
+
+        if(result.payload.success) {
+            props.history.push('/signin')
+        } else {
+            alert('회원가입 에러');
+        }
+        
     };
 
     return (

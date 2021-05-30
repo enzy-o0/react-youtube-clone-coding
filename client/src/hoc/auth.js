@@ -16,15 +16,16 @@ export default function (SpecificComponent, option, adminRoute = null) {
         const dispatch = useDispatch();
 
         useEffect(() => {
-            dispatch(auth()).then(response => {
-                //로그인 하지 않은 상태
-                if (!response.payload.isAuth) {
+
+            const dispatchAuth = async() => {
+                const dispatchResult = await dispatch(auth());
+                if (!dispatchResult.payload.isAuth) {
                     if (option){
                         props.history.push('/signIn')
                     }
                 } else {
                     // 로그인 안한 상태
-                    if (adminRoute && !response.payload.isAdmin) {
+                    if (adminRoute && !dispatchResult.payload.isAdmin) {
                         props.history.push('/')
                     } else {
                         if (option === false) {
@@ -32,7 +33,9 @@ export default function (SpecificComponent, option, adminRoute = null) {
                         }
                     }
                 }
-            })            
+            }     
+
+            dispatchAuth();
         }, []) 
 
         return(

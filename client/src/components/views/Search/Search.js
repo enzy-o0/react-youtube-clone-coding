@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 
 import moment from 'moment';
-import axios from 'axios';
+import Axios from 'axios';
 
 import Avatar from '@material-ui/core/Avatar';
-import { Card, Icon, Col, Typography, Row} from 'antd';
+import { Col, Typography, Row} from 'antd';
 const { Title } = Typography;
-const { Meta } = Card;
 
 function Search(props) {
     const [SearchList, setSearchList] = useState([])
@@ -25,15 +24,18 @@ function Search(props) {
 
     useEffect(() => {
 
-            axios.get('https://www.googleapis.com/youtube/v3/search', { params })
-            .then(response => {
-                if (response.data !== null) {
-                    console.log(response.data.items);
-                    setSearchList(response.data.items)
+        const searchApi = async() => {
+        
+                const searchResult = await Axios.get('https://www.googleapis.com/youtube/v3/search', { params });
+    
+                if (searchResult.data !== null) {
+                    setSearchList(searchResult.data.items)
                 } else {
                     alert('비디오 목록을 불러오는데 실패했습니다.');
                 }
-            }) 
+        }
+
+        searchApi();
 
     }, [])
 

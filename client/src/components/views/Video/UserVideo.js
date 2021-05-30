@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
-import axios from 'axios';
-import { Card, Icon, Avatar, Col, Typography, Row} from 'antd';
+
+import Axios from 'axios';
+
 import moment from 'moment';
+
+import { Card, Avatar, Col, Typography, Row} from 'antd';
 const { Title } = Typography;
 const { Meta } = Card;
 
@@ -11,15 +14,19 @@ function UserVideo() {
     const [VideoList, setVideoList] = useState([])
 
     useEffect(() => {
-        axios.get('/api/video/list')
-            .then(response => {
-                if (response.data.success) {
-                    console.log(response.data.videos)
-                    setVideoList(response.data.videos)
-                } else {
-                    alert('비디오 목록을 불러오는데 실패했습니다.');
-                }
-            }) 
+
+        const videoListApi = async() => {
+            const videoListResult = await Axios.get('/api/video/list');
+
+            if (videoListResult.data.success) {
+                setVideoList(videoListResult.data.videos)
+            } else {
+                alert('비디오 목록을 불러오는데 실패했습니다.');
+            }
+        }
+
+        videoListApi();
+        
     }, [])
 
     const renderVideo = VideoList.map((video, index)=> {

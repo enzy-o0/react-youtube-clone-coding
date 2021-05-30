@@ -1,8 +1,8 @@
 import React from 'react'
+
 import Typography from '@material-ui/core/Typography';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     section: {
@@ -21,12 +21,12 @@ export default function Logo() {
 
     return (
         <div className={classes.section}>
-                <Link to="/">
+                <a href="/">
                     <Typography className={classes.title} variant="h6" noWrap>
                             <VideoLibraryIcon />
                             AZTube
                     </Typography>
-                </Link>
+                </a>
         </div>
     )
 }

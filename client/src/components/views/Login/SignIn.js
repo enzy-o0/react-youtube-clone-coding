@@ -1,8 +1,10 @@
 import React from 'react'
-import { Form, Input, Button } from 'antd';
-import { useDispatch } from 'react-redux';
-import { SignInUser } from '../../../_actions/user_action'
 import { withRouter, Link} from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+
+import { SignInUser } from '../../../_actions/user_action'
+
+import { Form, Input, Button } from 'antd';
 
 function SignIn(props) {
     const dispatch = useDispatch();
@@ -21,17 +23,18 @@ function SignIn(props) {
         wrapperCol: { offset: 10, span: 20 },
     };
 
-    const onSubmitHandler = (value) => {
+    const onSubmitHandler = async(value) => {
         // event.preventDefault(); // refresh 방지
-        dispatch(SignInUser(value))
-                .then(response => {
-                    if(response.payload.success) {
-                        window.localStorage.setItem('userId', response.payload.userId);
-                        props.history.push('/')
-                    } else {
-                        alert('Error')
-                    }
-                })
+        
+        const result = await dispatch(SignInUser(value));
+
+        if(result.payload.success) {
+            window.localStorage.setItem('userId', result.payload.userId);
+            props.history.push('/')
+        } else {
+            alert('로그인 에러');
+        }
+
     };
 
     

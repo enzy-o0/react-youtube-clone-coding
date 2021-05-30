@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { Typography, Button, Form, Input, message } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import DropZone from 'react-dropzone'
-import { PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom'
+import DropZone from 'react-dropzone'
+
+import Axios from 'axios';
+
+import { Typography, Button, Form, Input, message } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { PlusOutlined } from '@ant-design/icons';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const { Title } = Typography
@@ -42,7 +45,7 @@ function VideoUpload(props) {
         isLoading && <CircularProgress color="secondary" />
     )
 
-    const onDrop = (files) => {
+    const onDrop = async(files) => {
         
         let formData = new FormData();
         const config = {
@@ -51,37 +54,32 @@ function VideoUpload(props) {
 
         formData.append("file", files[0])
 
-        axios.post('/api/video/upload', formData, config)
-            .then(response=> {
-                if (response.data.success) {
-                    console.log(response.data);
+        const videoUpload = await Axios.post('/api/video/upload', formData, config);
 
-                    let variable = {
-                        url: response.data.url,
-                        fileName: response.data.fileName
-                    }
+        if (videoUpload.data.success) {
+            let variable = {
+                url: videoUpload.data.url,
+                fileName: videoUpload.data.fileName
+            }
 
-                    setVideoFilePath(response.data.url)
-                    setIsLoading(true)
-                    axios.post('/api/video/thumbnail', variable)
-                        .then(response => {
-                            if(response.data.success) {
-                                console.log(response.data);
-                                setVideoDuration(response.data.fileDuration)
-                                setVideoThumbNailPath(response.data.url)
-                                setIsLoading(false)
-                            } else {
-                                console.log(response);
-                                alert('썸네일 생성에 실패했습니다.');
-                            }
-                        })
-                } else {
-                    alert('비디오 업로드를 실패했습니다.');
-                }
-            }) 
+            setVideoFilePath(videoUpload.data.url)
+            setIsLoading(true)
+
+            const videoThumbnail = await Axios.post('/api/video/thumbnail', variable);
+
+            if(videoThumbnail.data.success) {
+                setVideoDuration(videoThumbnail.data.fileDuration)
+                setVideoThumbNailPath(videoThumbnail.data.url)
+                setIsLoading(false)
+            } else {
+                alert('썸네일 생성에 실패했습니다.');
+            }
+        } else {
+            alert('비디오 업로드를 실패했습니다.');
+        }
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async(e) => {
         e.preventDefault();
         
         const variables = {
@@ -93,24 +91,22 @@ function VideoUpload(props) {
             thumbnail: VideoThumbNailPath
         }
 
-        axios.post('/api/video/uploadVideo', variables)
-            .then(response => {
-                if (response.data.success) {
-                    console.log(response.data);
-                    if (response.data.success) {
-                        message.success('성공적으로 업로드 했습니다.');
+        const videoUploadVideo = await Axios.post('/api/video/uploadVideo', variables);
 
-                        setTimeout(() => {
-                            props.history.push("/video");
-                        }, 3000)
-                    } else {
-                        alert('Log Out Failed')
-                    }
+        if (videoUploadVideo.data.success) {
+            if (videoUploadVideo.data.success) {
+                message.success('성공적으로 업로드 했습니다.');
 
-                } else {
-                    alert('비디오 업로드에 실패 했습니다.');
-                }
-            })
+                setTimeout(() => {
+                    props.history.push("/video");
+                }, 3000)
+            } else {
+                alert('Log Out Failed')
+            }
+
+        } else {
+            alert('비디오 업로드에 실패 했습니다.');
+        }
     }
 
     return (
@@ -136,6 +132,7 @@ function VideoUpload(props) {
 
                     <div style={{width: '300px', height: '240px', display: 'flex',
                                 alignItems:'center', justifyContent:'center'}}>
+                        {renderLoading}
                         { VideoThumbNailPath && <img src={process.env.NODE_ENV === 'development' ? `http://localhost:5000/${VideoThumbNailPath}`
                             : `https://aztubes.herokuapp.com/${VideoThumbNailPath}`} alt="videoThumbNail" />}
                     </div>
@@ -143,12 +140,12 @@ function VideoUpload(props) {
 
                 <br/>
                 <br/>
-                <label>Title</label>
+                <label>제목</label>
                 <Input onChange={onTitleChange} value={VideoTitle} />
 
                 <br/>
                 <br/>
-                <label>Description</label>
+                <label>설명</label>
                 <TextArea onChange={onDescriptionChange} value={VideoDescription} />
 
                 <br/>
@@ -170,7 +167,7 @@ function VideoUpload(props) {
                 <br/>
                 <br/> */}
                 <Button type="primary" size="large" onClick={onSubmit}>
-                    Upload
+                    영상 업로드
                 </Button>
 
             </Form>

@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import {Row, Col, List} from 'antd'
-import axios from 'axios'
+
 import Avatar from 'antd/lib/avatar/avatar';
 import SideVideo from './Sections/VideoDetailSide'
 import SubscribeVideo from './Sections/VideoSubscribe'
 import VideoComment from './Sections/VideoComment'
 import LikeDislike from './Sections/Sections/VideoLikeDisLike'
+
+import Axios from 'axios'
+
+import {Row, Col, List} from 'antd'
+
 
 function VideoDetail(props) {
 
@@ -19,32 +23,33 @@ function VideoDetail(props) {
     }
 
     useEffect(() => {
-        axios.post('/api/video/getVideoDetail', variable)
-            .then(response => {
-                if (response.data.success) {
-                    console.log(response.data.videoDetails);
-                    setVideoDetail(response.data.videoDetails);
-                } else {
-                    alert('비디오 상세페이지를 불러오지 못했습니다.');
-                }
-            })
 
-        axios.post('/api/video/getComments', variable)
-            .then(response => {
-                if (response.data.success) {
-                    console.log(response.data.comments);
-                    setCommentLists(response.data.comments);
-                } else {
-                    alert('코멘트 리스트를 불러오지 못했습니다.');
-                }
-            })   
+        const getVideoDetailApi = async() => {
+            try {
+                const getVideoDetailResult = await Axios.post('/api/video/getVideoDetail', variable);
+                setVideoDetail(getVideoDetailResult.data.videoDetails);
+            } catch (err) {
+                alert('비디오 상세페이지를 불러오지 못했습니다.', err);
+            }
+        }
+
+        const getCommentsApi = async() => {
+            const getCommentResult = await Axios.post('/api/video/getComments', variable)
+            if (getCommentResult.data.success) {
+                setCommentLists(getCommentResult.data.comments);
+            } else {
+                alert('코멘트 리스트를 불러오지 못했습니다.');
+            }
+        }
+
+        getVideoDetailApi();
+        getCommentsApi();
     }, [])
 
     const refreshFunction = (addComment) => {
         setCommentLists(CommentLists.concat(addComment))
     }
 
-    console.log(VideoDetail.writer)
     if (VideoDetail.writer) {
 
         const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <SubscribeVideo userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />  
@@ -55,7 +60,8 @@ function VideoDetail(props) {
                     <div style={{ width: '100%', padding: '3rem 4rem', marginTop: '1rem'}}>
     
                         <video controls style={{ width: '100%'}} >
-                            <source src={`http://localhost:5000/${VideoDetail.filePath}`} type="video/mp4"/>
+                            <source src={process.env.NODE_ENV === 'development' ? `http://localhost:5000/${VideoDetail.filePath}`
+                        : `https://aztubes.herokuapp.com/${VideoDetail.filePath}`} type="video/mp4"/>
                         </video>
 
                         <List.Item
