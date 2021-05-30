@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Form, Input, Button, Checkbox } from 'antd';
+import React from 'react'
+import { Form, Input, Button } from 'antd';
 import { useDispatch } from 'react-redux';
 import { SignInUser } from '../../../_actions/user_action'
 import { withRouter, Link} from 'react-router-dom'
@@ -7,10 +7,10 @@ import { withRouter, Link} from 'react-router-dom'
 function SignIn(props) {
     const dispatch = useDispatch();
 
-    const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false;
-    const [rememberMe, setRememberMe] = useState(rememberMeChecked)
+    // const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false;
+    // const [rememberMe, setRememberMe] = useState(rememberMeChecked)
 
-    const initial = localStorage.getItem("rememberMe") ? localStorage.getItem("rememberMe") : '';
+    // const initial = localStorage.getItem("rememberMe") ? localStorage.getItem("rememberMe") : '';
 
     const layout = {
         labelCol: { span: 8 },
@@ -23,18 +23,10 @@ function SignIn(props) {
 
     const onSubmitHandler = (value) => {
         // event.preventDefault(); // refresh 방지
-        console.log('value: ', value);
-
         dispatch(SignInUser(value))
                 .then(response => {
                     if(response.payload.success) {
                         window.localStorage.setItem('userId', response.payload.userId);
-                        if (rememberMe === true) {
-                            window.localStorage.setItem('rememberMe', true);
-                        } else {
-                            localStorage.removeItem('rememberMe');
-                        }
-
                         props.history.push('/')
                     } else {
                         alert('Error')
@@ -43,9 +35,9 @@ function SignIn(props) {
     };
 
     
-    const rememberMeHandler = () => {
-        setRememberMe(!rememberMe)
-    };
+    // const rememberMeHandler = () => {
+    //     setRememberMe(!rememberMe)
+    // };
 
     return (
         <div style={{ 
@@ -54,13 +46,12 @@ function SignIn(props) {
             <Form
             {...layout}
             name="basic"
-            initialValues={rememberMe}
             onFinish={onSubmitHandler}
             >
                 <Form.Item
                     label="이메일"
                     name="email"
-                    value={initial}
+                    value="test@test.com"
                     rules={[{ required: true, message: '이메일을 입력해주세요.' }]}
                 >
                     <Input/>
@@ -69,14 +60,15 @@ function SignIn(props) {
                 <Form.Item
                     label="비밀번호"
                     name="password"
+                    value="000000"
                     rules={[{ required: true, message: '비밀번호를 입력해주세요.' }]}
                 >
                     <Input.Password />
                 </Form.Item>
 
-                <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+                {/* <Form.Item {...tailLayout} name="remember" valuePropName="checked">
                     <Checkbox onChange={rememberMeHandler} checked={rememberMe}>아이디 저장하기</Checkbox>
-                </Form.Item>
+                </Form.Item> */}
 
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit">
