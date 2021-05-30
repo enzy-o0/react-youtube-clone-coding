@@ -25,7 +25,7 @@ function VideoDetailSide() {
         return <div key={index} style={{ marginTop: '1rem', padding: '0 1rem' }}>
             <a href={`/video/${video._id}`}  style={{display: 'flex', color:'gray' }}>
                 <div style={{ width: '40%'}}>
-                    <img style={{ width: '100%', height: '100%'}} src={`http://localhost:5000/${video.thumbnail}`}  alt="썸네일 이미지"/>
+                    <img style={{ width: '100%', height: '100%'}} src={`https://aztubes.herokuapp.com/${video.thumbnail}`}  alt="썸네일 이미지"/>
                 </div>
                 <div style={{ width: '40%', marginLeft: '1rem'}}>
                     <span style={{ color: '#000', fontSize: '1rem'}}>{video.title}</span>
