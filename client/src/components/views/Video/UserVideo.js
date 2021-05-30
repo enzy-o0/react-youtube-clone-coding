@@ -29,7 +29,7 @@ function UserVideo() {
 
         return <Col lg={6} md={8} xs={24} key={index}>
             <div style={{ position: 'relative'}}>
-                <a href = {`/video/${video._id}`}>
+                <a href = {`/myVideo/${video._id}`}>
                     <img style={{ width: '100%'}} src={process.env.NODE_ENV === 'development' ? `http://localhost:5000/${video.thumbnail}`
                     : `https://aztubes.herokuapp.com/${video.thumbnail}`} alt="비디오 썸네일" />
                     <div className="duration">

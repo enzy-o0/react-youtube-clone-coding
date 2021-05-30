@@ -23,7 +23,7 @@ function VideoDetailSide() {
         let seconds = Math.floor((video.duration - minutes * 60));
 
         return <div key={index} style={{ marginTop: '1rem', padding: '0 1rem' }}>
-            <a href={`/video/${video._id}`}  style={{display: 'flex', color:'gray' }}>
+            <a href={`/myVideo/${video._id}`}  style={{display: 'flex', color:'gray' }}>
                 <div style={{ width: '40%'}}>
                 <img style={{ width: '100%', height: '100%'}} src={process.env.NODE_ENV === 'development' ? `http://localhost:5000/${video.thumbnail}`
                     : `https://aztubes.herokuapp.com/${video.thumbnail}`} alt="비디오 썸네일" />

@@ -36,7 +36,7 @@ function App() {
                     <Route exact path="/signIn" component={Auth(SignInPage, false)} />
                     <Route exact path="/signUp" component={Auth(SignUpPage, false)} />
                     <Route exact path="/upload" component={Auth(VideoUploadPage, true)} />
-                    <Route exact path="/video/:videoId" component={Auth(VideoDetailPage, null)} />
+                    <Route exact path="/myVideo/:videoId" component={Auth(VideoDetailPage, null)} />
                     <Route exact path="/youtube/:youtubeId" component={Auth(LandingDetail, null)} />
                     <Route exact path="/subScribe" component={Auth(SubscribePage, true)} />
                     <Route exact path="/youtube" component={Auth(LandingPage, null)} />
