@@ -1,93 +1,68 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import {Row, Col, List} from 'antd'
-import axios from 'axios'
+import Axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar';
 import SideVideo from '../Video/Sections/VideoDetailSide'
-import SubscribeVideo from '../Video/Sections/VideoSubscribe'
-import VideoComment from '../Video/Sections/VideoComment'
-import LikeDislike from '../Video/Sections/Sections/VideoLikeDisLike'
-import { VIDEO_URL } from '../../Config'
 
 function LandingDetail(props) {
 
     const [VideoDetail, setVideoDetail] = useState([]);
-    const [CommentLists, setCommentLists] = useState([]);
-
-
-    const youtubeId = props.match.params.youtubeId;
-    
-    const variable = { 
-        part: 'snippet',
-        id: youtubeId,
-    }
 
     useEffect(() => {
         
-        axios.get({VIDEO_URL}, { variable })
-            .then(response => {
-                console.log(response);
+        const getVideos = async() => {
+            const videos = await Axios.get(`https://www.googleapis.com/youtube/v3/videos?key=${process.env.REACT_APP_API_KEY}&part=snippet&id=${props.match.params.youtubeId}`);
+            
+            if (videos.data !== null) {
+                setVideoDetail(videos.data.items)
+                console.log(videos.data.items)
+                
+            } else {
+                alert('비디오 목록을 불러오는데 실패했습니다.');
+            }
 
-                if (response.data !== null) {
-                    setVideoDetail(response.data.items)
-                } else {
-                    alert('비디오 목록을 불러오는데 실패했습니다.');
-                }
-        }) 
+        }
+        getVideos();
+    }, []);
 
-        axios.post('/api/video/getComments', variable)
-            .then(response => {
-                if (response.data.success) {
-                    console.log(response.data.comments);
-                    setCommentLists(response.data.comments);
-                } else {
-                    alert('코멘트 리스트를 불러오지 못했습니다.');
-                }
-            })   
-    }, [])
+    const renderVideo = VideoDetail.map((video, index)=> {
 
-    const refreshFunction = (addComment) => {
-        setCommentLists(CommentLists.concat(addComment))
-    }
+        return <Col lg={18} xs={24}  key={index}>
+            <div style={{ width: '100%',  padding: '5rem 4rem 0 4rem'}}>
 
-    console.log(VideoDetail.writer)
-    if (VideoDetail.writer) {
-
-        const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <SubscribeVideo userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />  
-        
-        return (
-            <Row gutter={[16, 16]}>
-                <Col lg={18} xs={24}>
-                    <div style={{ width: '100%', padding: '3rem 4rem'}}>
-    
-                        <video controls style={{ width: '100%'}} >
-                            <source src={`http://localhost:5000/${VideoDetail.filePath}`} type="video/mp4"/>
-                        </video>
-
-                        <List.Item
-                            actions={[<LikeDislike video videoId={youtubeId} useId={localStorage.getItem('userId')} />, subscribeButton]}>
-
-                            <List.Item.Meta
-                                avatar={<Avatar src={VideoDetail.writer.image}/>}
-                                title={VideoDetail.writer.name}
-                                description={VideoDetail.description}
-                            />
-                        </List.Item>
-
-                        {CommentLists && (
-                            <VideoComment refreshFunction={refreshFunction} commentList={CommentLists} videoId={youtubeId}/>
-                        ) }
-
+                <div className="video-player" >
+                    <div className="embed-responsive embed-responsive-16by9" >
+                        <iframe className="embed-responsive-item" style={{ width: '100%', height: '20rem'}}
+                            src={`https://www.youtube.com/embed/${video.id}`} allowFullScreen></iframe>
                     </div>
-                </Col>
-                <Col lg={6} xs={24}>
-                    <SideVideo />
-                </Col>
-            </Row>
-        )
-    } else {
-        return <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems:'center'}}> loading... </div>
-    }
+                </div>
+                
+
+                <List.Item>
+                    <List.Item.Meta
+                        avatar={<Avatar src={`http://gravatar.com/avatar/${video.id}?d=identicon`}/>}
+                        title={video.snippet.title}
+                        description={video.snippet.description}
+                    />
+                </List.Item>
+                {/* 
+                {CommentLists && (
+                    <VideoComment refreshFunction={refreshFunction} commentList={CommentLists} videoId={VideoDetail.id}/>
+                ) } */}
+
+            </div>
+        </Col>
+    })
+        
+    return (
+        <Row gutter={[16, 16]} style={{height: '100%'}}>
+            {renderVideo}
+            <Col lg={6} xs={24}>
+                <SideVideo />
+            </Col>
+        </Row>
+    )
 }
 
 export default withRouter(LandingDetail)

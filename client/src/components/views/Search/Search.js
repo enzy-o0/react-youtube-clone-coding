@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 
 import moment from 'moment';
 import axios from 'axios';
-import { API_URL } from '../../Config'
 
 import Avatar from '@material-ui/core/Avatar';
 import { Card, Icon, Col, Typography, Row} from 'antd';
@@ -15,58 +14,46 @@ function Search(props) {
 
     const keyword = props.match.params.q;
 
-    const variable = {
+    const params = {
         part: 'snippet',
         q: keyword,
         maxResults: 20,
         type: 'video',
         order: 'viewCount',
+        key: process.env.REACT_APP_API_KEY
     };
-
-    const keywords = {
-        query: keyword
-    }
 
     useEffect(() => {
 
-            axios.post('/api/video/search', keywords)
+            axios.get('https://www.googleapis.com/youtube/v3/search', { params })
             .then(response => {
                 if (response.data !== null) {
-                    console.log(response.data.videos);
-                    setSearchList(response.data.videos)
+                    console.log(response.data.items);
+                    setSearchList(response.data.items)
                 } else {
                     alert('비디오 목록을 불러오는데 실패했습니다.');
                 }
             }) 
+
     }, [])
 
     const renderVideo = SearchList.map((video, index)=> {
 
-        let minutes = Math.floor(video.duration / 60);
-        let seconds = Math.floor((video.duration - minutes * 60));
-
         return <Col lg={6} md={8} xs={24} key={index}>
-            <div style={{ position: 'relative'}}>
-                <a href = {`/video/${video._id}`}>
-                    <img style={{ width: '100%'}} src={`http://localhost:5000/${video.thumbnail}`} alt="비디오 썸네일" />
-                    <div className="duration">
-                        <span>{minutes} : {seconds}</span>
-                    </div>
-                </a>
-                <br />
+            <div style={{ display: 'flex', flexDirection: 'column'}}>
+                <Link to = {`/youtube/${video.id.videoId}`} >
+                    <img style={{ width: '100%', marginBottom: '1rem'}} src={video.snippet.thumbnails.high.url} alt="비디오 썸네일" />
+                </Link>
+                <div style={{ display: 'flex'}}>
+                    <Avatar src={`http://gravatar.com/avatar/${video.id.videoId}?d=identicon`} />
+                    <span className="videoInfoTitle">{video.snippet.title}</span>
+                </div>
+                <span className="videoInfo"> {video.snippet.channelTitle}</span>
+                <span className="videoInfo"> {moment(video.snippet.publishedAt).format("YYYY-MM-DD")}</span>
             </div>
-            <br />
-            <Meta 
-                avatar={
-                    <Avatar src={video.writer?.image} />
-                }
-                title={video.title}
-            />
-            <span>{video.writer?.name}</span>
-            <br />
-            <span style={{ marginLeft: '3rem'}} > {moment(video.createAt).format("YYYY-MM-DD")}</span>
         </Col>
     })
+
 
     return (
         <div style={{ width: '90%', margin: '5rem auto' }}>

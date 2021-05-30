@@ -1,9 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const { Video } = require("../models/Video");
 const { Comment } = require("../models/Comment");
 const multer = require("multer");
-var ffmpeg = require('fluent-ffmpeg');
+const ffmpeg = require('fluent-ffmpeg');
+let mongoose = require("mongoose");
 
 let storage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -65,7 +66,7 @@ router.post('/thumbnail', (req, res) => {
         return res.json({ success: false, err});
     })
     .screenshot( {
-        count: 3,
+        count: 1,
         folder: 'videoFiles/thumbnails',
         size: '320x240',
         filename: 'thumbnail-%b.png'
@@ -137,8 +138,9 @@ router.post("/saveComment", (req, res) => {
 })
 
 router.post("/getComments", (req, res) => {
+    const videoId = mongoose.Types.ObjectId(req.body.videoId);
 
-    Comment.find({ "videoId": req.body.videoId })
+    Comment.find({ "videoId": videoId })
         .populate('writer')
         .exec((err, comments) => {
             if (err) return res.status(400).send(err)

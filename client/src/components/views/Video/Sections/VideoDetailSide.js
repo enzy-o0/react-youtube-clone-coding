@@ -40,7 +40,7 @@ function VideoDetailSide() {
     
     return (
         <React.Fragment>
-            <div style={{ marginTop:'3rem' }}></div>
+            <div style={{ marginTop:'5rem' }}></div>
             { renderVideo }
         </React.Fragment>
     )

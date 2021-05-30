@@ -58,7 +58,7 @@ function SignUp(props) {
                 <Form.Item
                     label="Email"
                     name="email"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
+                    rules={[{ required: true, message: '이메일을 입력해주세요.' }]}
                 >
                     <Input/>
                 </Form.Item>
@@ -66,7 +66,7 @@ function SignUp(props) {
                 <Form.Item
                     label="Name"
                     name="name"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
+                    rules={[{ required: true, message: '이름을 입력해주세요.' }]}
                 >
                     <Input/>
                 </Form.Item>
@@ -74,7 +74,7 @@ function SignUp(props) {
                 <Form.Item
                     label="Password"
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    rules={[{ required: true, message: '비밀번호를 입력해주세요.' }]}
                 >
                     <Input.Password 
                         value={Password}
@@ -84,7 +84,7 @@ function SignUp(props) {
                 <Form.Item
                     label="Confirm Password"
                     name="confirmPassword"
-                    rules={[{ required: true, message: 'Please confirm your password!' }]}
+                    rules={[{ required: true, message: '비밀번호를 확인해주세요.' }]}
                 >
                     <Input.Password 
                         value={ConfirmPW}
