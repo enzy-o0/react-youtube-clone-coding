@@ -37,7 +37,7 @@ function Search(props) {
 
         searchApi();
 
-    }, [])
+    }, [params])
 
     const renderVideo = SearchList.map((video, index)=> {
 
