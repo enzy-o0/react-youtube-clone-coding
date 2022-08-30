@@ -2,8 +2,6 @@
 
 > 유튜브 클론 코딩 연습
 
-[AZTube 데모 링크](https://aztubes.herokuapp.com/)
-
 ## Skills
 
 - React.js
